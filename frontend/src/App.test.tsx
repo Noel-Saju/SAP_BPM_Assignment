@@ -29,10 +29,12 @@ describe("App", () => {
     analyseProcessMock.mockResolvedValue(analysis);
     render(<App />);
 
-    await user.type(screen.getByLabelText(/describe your business process/i), "Orders are entered by hand.");
-    await user.click(screen.getByRole("button", { name: "Analyse Process" }));
+    expect(screen.getByRole("link", { name: "Skip to main content" })).toHaveAttribute("href", "#main-content");
+    expect(screen.getByRole("heading", { name: /find a better way to work/i })).toBeInTheDocument();
+    await user.type(screen.getByLabelText(/your process, as it works today/i), "Orders are entered by hand.");
+    await user.click(screen.getByRole("button", { name: /analyse process/i }));
 
-    const summarySection = screen.getByRole("region", { name: "Process summary" });
+    const summarySection = screen.getByRole("region", { name: /process summary/i });
     expect(await within(summarySection).findByText(analysis.summary)).toBeInTheDocument();
     expect(screen.getByText("high priority")).toBeInTheDocument();
     await user.selectOptions(
@@ -52,10 +54,10 @@ describe("App", () => {
     });
     render(<App />);
 
-    fireEvent.change(screen.getByLabelText(/describe your business process/i), {
+    fireEvent.change(screen.getByLabelText(/your process, as it works today/i), {
       target: { value: "Orders are entered by hand." },
     });
-    fireEvent.click(screen.getByRole("button", { name: "Analyse Process" }));
+    fireEvent.click(screen.getByRole("button", { name: /analyse process/i }));
     fireEvent.click(await screen.findByRole("button", { name: "Cancel analysis" }));
 
     await waitFor(() => expect(receivedSignal?.aborted).toBe(true));

@@ -20,12 +20,12 @@ describe("ResultsDisplay", () => {
     const onPriorityChange = vi.fn();
     render(<ResultsDisplay data={result} onPriorityChange={onPriorityChange} />);
 
-    expect(screen.getByRole("heading", { name: "Process summary" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: /process summary/i })).toBeInTheDocument();
     expect(screen.getByText(result.summary)).toBeInTheDocument();
     expect(screen.getByText(result.inefficiencies[0])).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Automate order checks" })).toBeInTheDocument();
     expect(screen.getByText("high priority")).toBeInTheDocument();
-    expect(screen.getByText("medium complexity")).toBeInTheDocument();
+    expect(screen.getByText("medium effort")).toBeInTheDocument();
     fireEvent.change(screen.getByRole("combobox", { name: "Adjust priority for Automate order checks" }), {
       target: { value: "medium" },
     });

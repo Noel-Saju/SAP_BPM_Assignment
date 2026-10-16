@@ -16,7 +16,10 @@ const ProcessForm = ({ onSubmit, onCancel, loading }: Props) => {
 
   return (
     <form onSubmit={handleSubmit} className="process-form">
-      <label htmlFor="process-input">Describe your business process:</label>
+      <div className="form-label-row">
+        <label htmlFor="process-input">Your process, as it works today</label>
+        <span className="form-step">01 / Describe</span>
+      </div>
       <textarea
         id="process-input"
         value={input}
@@ -25,22 +28,30 @@ const ProcessForm = ({ onSubmit, onCancel, loading }: Props) => {
         maxLength={10000}
         required
         aria-describedby="process-hint process-count"
-        placeholder="e.g. When a customer submits a support ticket, it gets emailed to a shared inbox. Someone manually reads it, assigns it to the right team in a spreadsheet, and the team lead checks the spreadsheet every morning to distribute work."
+        placeholder="For example: A customer sends a support request by email. A coordinator reads it, assigns a category and owner in a spreadsheet, then the team lead distributes work each morning."
       />
       <div className="form-meta">
-        <p id="process-hint">
+        <p className="privacy-hint" id="process-hint">
+          <svg aria-hidden="true" viewBox="0 0 20 20" fill="none">
+            <rect x="4" y="8" width="12" height="9" rx="2" stroke="currentColor" strokeWidth="1.5" />
+            <path d="M7 8V5.8a3 3 0 0 1 6 0V8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+          </svg>
           Your description is sent to Google Gemini for analysis. Do not include confidential or personal data.
         </p>
-        <p id="process-count" aria-live="polite">{input.length}/10,000</p>
+        <p className="char-count" id="process-count" aria-live="polite">{input.length.toLocaleString()}/10,000</p>
       </div>
-      <button type="submit" disabled={loading || !input.trim()}>
-        {loading ? "Analysing…" : "Analyse Process"}
-      </button>
-      {loading && (
-        <button type="button" className="cancel-button" onClick={onCancel}>
-          Cancel analysis
+      <div className="form-actions">
+        <button className="primary-button" type="submit" disabled={loading || !input.trim()}>
+          {loading ? "Analysing…" : "Analyse process"}
+          {!loading && <svg aria-hidden="true" viewBox="0 0 20 20" fill="none"><path d="M3.5 10h12m-5-5 5 5-5 5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" /></svg>}
         </button>
-      )}
+        {loading && (
+          <button type="button" className="cancel-button" onClick={onCancel}>
+            Cancel analysis
+          </button>
+        )}
+      </div>
+      <p className="helper-copy">Usually takes around 10–30 seconds. You can cancel at any time.</p>
     </form>
   );
 };
