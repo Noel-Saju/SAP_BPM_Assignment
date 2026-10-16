@@ -36,7 +36,7 @@ You are free to refactor, restructure, and improve the code however you see fit.
 
 ### Prerequisites
 
-- Node.js 18+
+- Node.js 22.12+
 - Python 3.13 (3.14 not yet supported)
 - A Gemini API key (free tier: [https://aistudio.google.com/apikey](https://aistudio.google.com/apikey))
 
@@ -47,7 +47,7 @@ cd backend
 python -m venv venv
 source venv/bin/activate   # On Windows: venv\Scripts\activate
 pip install -r requirements.txt
-cp env.example .env        # Then add your GEMINI_API_KEY
+cp -n env.example .env     # Then add your GEMINI_API_KEY;
 python run.py
 ```
 
@@ -58,10 +58,27 @@ The backend runs on `http://localhost:8000`.
 ```bash
 cd frontend
 npm install
+cp .env.example .env.local
 npm run dev
 ```
 
 The frontend runs on `http://localhost:5173`.
+
+The frontend and backend require explicit environment configuration. Set `VITE_API_BASE_URL` in `frontend/.env.local` and `CORS_ORIGINS` in `backend/.env` to the exact frontend origin. If `backend/.env` already exists, add the settings from `backend/env.example` without replacing your API key. The backend binds to `127.0.0.1` by default. Do not expose it publicly without authentication, TLS, and appropriate proxy/network controls. Analysis descriptions are sent to Google Gemini; do not submit confidential, personal, or otherwise sensitive information. The in-memory rate limit applies per backend process and is intended for local/single-instance use, not as a distributed production limit.
+
+`/health` is a liveness check; `/ready` reports whether the model provider is configured (it does not make a billable provider call). Provider requests have bounded retries, a timeout, a concurrency cap, and a per-client request limit. If Gemini temporarily overloads the configured model, the backend tries the models listed in `GEMINI_FALLBACK_MODELS` before returning a retryable service-unavailable response. The frontend supports canceling requests and validates the response schema before rendering.
+
+### Tests
+
+```bash
+cd backend
+venv/bin/python -m unittest discover -s tests
+
+cd ../frontend
+npm test
+npm run build
+npm audit
+```
 
 ## Submission
 
@@ -75,7 +92,9 @@ When you are done, make sure:
 
 ## Changes Made
 
-- Added backend request validation and schema validation for Gemini responses, with clear handling for missing API configuration and provider failures.
-- Made the Gemini model, CORS origins, and frontend API URL configurable through environment variables; added safe example environment files.
-- Replaced raw JSON output with typed, accessible sections for the summary, risks, and complexity-rated suggestions; improved loading, error, input-limit, and privacy messaging.
-- Added backend unit tests for input validation and successful, missing-key, and malformed-response cases.
+- Reworked backend validation and provider architecture: added typed input/output schemas, an injectable analysis-provider interface, and migrated to the Google Gen AI SDK with schema-constrained JSON output.
+- Improved provider resilience with bounded retries, configurable request deadlines, fallback Gemini models for transient overloads, analysis concurrency limits, per-client rate limiting, and actionable API error responses. Added separate liveness (`/health`) and configuration-readiness (`/ready`) endpoints.
+- Centralized backend configuration, made frontend API URL and CORS origins explicit, and bound the development API to loopback by default. Documented Gemini data handling and cautioned against sending sensitive process information.
+- Added explicit high/medium/low improvement priorities, deterministic ordering, and UI controls to adjust priority independently from implementation complexity.
+- Redesigned the frontend with responsive layouts, structured analysis sections, clearer form/loading/error states, skip navigation, keyboard focus styling, reduced-motion support, and accessible labels and announcements. Added request cancellation, a client timeout, and runtime response validation.
+- Added backend API/provider tests and frontend component/client tests. Verified 11 backend tests, 8 frontend tests, a successful production build, and `npm audit` with zero reported vulnerabilities; also confirmed a live sample analysis succeeds with model fallback enabled.
