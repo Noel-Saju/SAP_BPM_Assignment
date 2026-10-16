@@ -1,10 +1,11 @@
-import { ProcessAnalysisResponse } from "../types";
+import type { PriorityLevel, ProcessAnalysisResponse } from "../types";
 
 interface Props {
   data: ProcessAnalysisResponse;
+  onPriorityChange: (suggestionIndex: number, priority: PriorityLevel) => void;
 }
 
-const ResultsDisplay = ({ data }: Props) => {
+const ResultsDisplay = ({ data, onPriorityChange }: Props) => {
   return (
     <div className="results">
       <h2>Analysis Results</h2>
@@ -38,6 +39,23 @@ const ResultsDisplay = ({ data }: Props) => {
                     {suggestion.complexity} complexity
                   </span>
                 </div>
+                <p className={`priority priority-${suggestion.priority}`}>
+                  {suggestion.priority} priority
+                </p>
+                <label className="priority-control">
+                  Adjust priority
+                  <select
+                    aria-label={`Adjust priority for ${suggestion.title}`}
+                    value={suggestion.priority}
+                    onChange={(event) =>
+                      onPriorityChange(index, event.target.value as PriorityLevel)
+                    }
+                  >
+                    <option value="high">High</option>
+                    <option value="medium">Medium</option>
+                    <option value="low">Low</option>
+                  </select>
+                </label>
                 <p>{suggestion.description}</p>
               </article>
             ))}

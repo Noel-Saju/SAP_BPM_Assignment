@@ -89,6 +89,18 @@ header h1 {
   background: #064780;
 }
 
+.process-form .cancel-button {
+  align-self: flex-start;
+  padding: 0.45rem 0.7rem;
+  background: transparent;
+  color: #344563;
+  border: 1px solid #b8c4d4;
+}
+
+.process-form .cancel-button:hover {
+  background: #f3f6fa;
+}
+
 .process-form button:disabled {
   background: #999;
   cursor: not-allowed;
@@ -156,6 +168,44 @@ header h1 {
 
 .suggestion h4 {
   font-size: 1rem;
+}
+
+.priority {
+  display: inline-block;
+  margin-bottom: 0.45rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: capitalize;
+}
+
+.priority-high {
+  color: #9a2933;
+}
+
+.priority-medium {
+  color: #805b00;
+}
+
+.priority-low {
+  color: #17633a;
+}
+
+.priority-control {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0 0 0.65rem;
+  color: #526581;
+  font-size: 0.82rem;
+}
+
+.priority-control select {
+  padding: 0.25rem 0.4rem;
+  border: 1px solid #b8c4d4;
+  border-radius: 6px;
+  color: #172b4d;
+  background: #fff;
+  font: inherit;
 }
 
 .complexity {
