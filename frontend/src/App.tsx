@@ -12,11 +12,16 @@ function App() {
   const handleSubmit = async (processDescription: string) => {
     setLoading(true);
     setError(null);
+    setResult(null);
     try {
       const data = await analyseProcess(processDescription);
       setResult(data);
     } catch (err) {
-      setError("Something went wrong. Please try again.");
+      setError(
+        err instanceof Error
+          ? err.message
+          : "Unable to analyse the process. Please try again."
+      );
     } finally {
       setLoading(false);
     }
@@ -33,7 +38,12 @@ function App() {
 
       <main>
         <ProcessForm onSubmit={handleSubmit} loading={loading} />
-        {error && <p className="error">{error}</p>}
+        {loading && (
+          <p className="status" role="status">
+            Analysing your process…
+          </p>
+        )}
+        {error && <p className="error" role="alert">{error}</p>}
         {result && <ResultsDisplay data={result} />}
       </main>
     </div>

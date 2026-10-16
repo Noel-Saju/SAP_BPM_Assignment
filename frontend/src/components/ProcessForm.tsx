@@ -21,8 +21,15 @@ const ProcessForm = ({ onSubmit, loading }: Props) => {
         value={input}
         onChange={(e) => setInput(e.target.value)}
         rows={8}
+        maxLength={10000}
+        required
+        aria-describedby="process-hint process-count"
         placeholder="e.g. When a customer submits a support ticket, it gets emailed to a shared inbox. Someone manually reads it, assigns it to the right team in a spreadsheet, and the team lead checks the spreadsheet every morning to distribute work."
       />
+      <div className="form-meta">
+        <p id="process-hint">Avoid including confidential or personal information.</p>
+        <p id="process-count" aria-live="polite">{input.length}/10,000</p>
+      </div>
       <button type="submit" disabled={loading || !input.trim()}>
         {loading ? "Analysing..." : "Analyse Process"}
       </button>
