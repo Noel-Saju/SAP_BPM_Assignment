@@ -75,4 +75,7 @@ When you are done, make sure:
 
 ## Changes Made
 
-_Document your changes here._
+- Added backend request validation and schema validation for Gemini responses, with clear handling for missing API configuration and provider failures.
+- Made the Gemini model, CORS origins, and frontend API URL configurable through environment variables; added safe example environment files.
+- Replaced raw JSON output with typed, accessible sections for the summary, risks, and complexity-rated suggestions; improved loading, error, input-limit, and privacy messaging.
+- Added backend unit tests for input validation and successful, missing-key, and malformed-response cases.
