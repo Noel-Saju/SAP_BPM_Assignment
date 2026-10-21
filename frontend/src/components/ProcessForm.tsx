@@ -1,17 +1,16 @@
-import { useState } from "react";
-
 interface Props {
+  processDescription: string;
+  onDescriptionChange: (description: string) => void;
   onSubmit: (processDescription: string) => void;
   onCancel: () => void;
   loading: boolean;
 }
 
-const ProcessForm = ({ onSubmit, onCancel, loading }: Props) => {
-  const [input, setInput] = useState("");
+const ProcessForm = ({ processDescription, onDescriptionChange, onSubmit, onCancel, loading }: Props) => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSubmit(input);
+    onSubmit(processDescription);
   };
 
   return (
@@ -22,8 +21,8 @@ const ProcessForm = ({ onSubmit, onCancel, loading }: Props) => {
       </div>
       <textarea
         id="process-input"
-        value={input}
-        onChange={(e) => setInput(e.target.value)}
+        value={processDescription}
+        onChange={(e) => onDescriptionChange(e.target.value)}
         rows={8}
         maxLength={10000}
         required
@@ -38,10 +37,10 @@ const ProcessForm = ({ onSubmit, onCancel, loading }: Props) => {
           </svg>
           Your description is sent to Google Gemini for analysis. Do not include confidential or personal data.
         </p>
-        <p className="char-count" id="process-count" aria-live="polite">{input.length.toLocaleString()}/10,000</p>
+        <p className="char-count" id="process-count" aria-live="polite">{processDescription.length.toLocaleString()}/10,000</p>
       </div>
       <div className="form-actions">
-        <button className="primary-button" type="submit" disabled={loading || !input.trim()}>
+        <button className="primary-button" type="submit" disabled={loading || !processDescription.trim()}>
           {loading ? "Analysing…" : "Analyse process"}
           {!loading && <svg aria-hidden="true" viewBox="0 0 20 20" fill="none"><path d="M3.5 10h12m-5-5 5 5-5 5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" /></svg>}
         </button>
